@@ -15,6 +15,7 @@
 - [libiconv](https://ftp.gnu.org/gnu/libiconv/)
 - [libxml2](http://xmlsoft.org/sources/)
 - [libxslt](http://xmlsoft.org/sources/)
+- [OSSP UUID](http://www.ossp.org/pkg/lib/uuid/)
 
 ## How to use this?  
 1. Copy `build.sh` and `requirements` to the root directory of PostgreSQL source tree.  

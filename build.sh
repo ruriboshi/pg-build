@@ -6,9 +6,14 @@ _prefix_="${1:-"/usr/local/pgsql"}"
 _build_="${_top_}/_build"
 _src_="${_top_}/requirements"
 
-if [[ "$(head -n 1 README)" != 'PostgreSQL Database Management System' ]]; then
-  echo "This build script must be performed on the root directory of PostgreSQL source tree."
+if [ ! -f README ]; then
+  echo "Is the current directory the root of PostgreSQL source tree?"
   exit 1
+else
+  if [[ "$(head -n 1 README)" != 'PostgreSQL Database Management System' ]]; then
+    echo "This build script must be performed on the root directory of PostgreSQL source tree."
+    exit 1
+  fi
 fi
 
 # Create a working directory for compiling.
@@ -190,6 +195,17 @@ if [ ! -f "${_prefix_}/lib/libxslt.so" ]; then
   sudo make install || exit 1
 fi
 
+# 15. Compile OSSP-UUID
+cd "${_build_}"
+if [ ! -f "${_prefix_}/lib/libuuid.so" ]; then
+    tar -xf ${_src_}/uuid-*.*.*.tar.gz || exit 1
+    cd uuid-*.*.*/
+    ./configure --prefix=${_prefix_} \
+                --with-perl=${_prefix_} || exit 1
+    make -j 5 || exit 1
+    sudo make install || exit 1
+fi
+
 #---------------------------#
 # Finally, build PostgreSQL #
 #---------------------------#
@@ -210,6 +226,7 @@ make clean > /dev/null 2>&1
   --with-icu \
   --with-openssl \
   --with-libedit-preferred \
+  --with-uuid=ossp \
   --with-libxml \
   --with-libxslt \
   ICU_CFLAGS="$(icu-config --cppflags)" \
