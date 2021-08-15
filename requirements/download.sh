@@ -1,5 +1,8 @@
 #!/bin/bash
 
+m4_version='1.4.19'
+autoconf_version='2.71'
+automake_version='1.16.4'
 perl_version='5.34.0'
 openssl_version='1.1.1k'
 zlib_version='1.2.11'
@@ -32,6 +35,18 @@ function get_version()
 }
 
 # Download the source code.
+if [ ! -f "m4-${m4_version}.tar.gz" ]; then
+	wget https://ftp.gnu.org/gnu/m4/m4-${m4_version}.tar.gz
+fi
+
+if [ ! -f "autoconf-${autoconf_version}.tar.gz" ]; then
+	wget https://ftp.gnu.org/gnu/autoconf/autoconf-${autoconf_version}.tar.gz
+fi
+
+if [ ! -f "automake-${automake_version}.tar.gz" ]; then
+	https://ftp.gnu.org/gnu/automake/automake-${automake_version}.tar.gz
+fi
+
 if [ ! -f "perl-${perl_version}.tar.gz" ]; then
   wget https://www.cpan.org/src/$(get_version ${perl_version} MAJOR).0/perl-5.34.0.tar.gz
 fi

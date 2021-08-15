@@ -32,37 +32,67 @@ cd "${_src_}"
 export PATH=${_prefix_}/bin:${PATH}
 export LD_LIBRARY_PATH=${_prefix_}/lib64:${_prefix_}/lib:${LD_LIBRARY_PATH}
 
-# 1. Compile Perl
+# 1. Compile M4
+cd "${_build_}"
+if [ ! -f "${_prefix_}/bin/m4" ]; then
+  tar -xf ${_src_}/m4-*.*.*.tar.gz || exit 1
+  cd m4-*.*.*/
+  ./configure --prefix=${_prefix_} || exit 1
+  make -j 5 || exit 1
+  make install || exit 1
+fi
+
+# 2. Compile Autoconf
+cd "${_build_}"
+if [ ! -f "${_prefix_}/bin/autoconf" ]; then
+  tar -xf ${_src_}/autoconf-*.*.tar.gz || exit 1
+  cd autoconf-*.*/
+  ./configure --prefix=${_prefix_} || exit 1
+  make -j 5 || exit 1
+  make install || exit 1
+fi
+
+# 3. Compile Automake
+cd "${_build_}"
+if [ ! -f "${_prefix_}/bin/automake" ]; then
+  tar -xf ${_src_}/automake-*.*.*.tar.gz || exit 1
+  cd automake-*.*.*/
+  ./configure --prefix=${_prefix_} || exit 1
+  make -j 5 || exit 1
+  make install || exit 1
+fi
+
+# 4. Compile Perl
 cd "${_build_}"
 if [ ! -f "${_prefix_}/bin/perl" ]; then
   tar -xf ${_src_}/perl-*.*.*.tar.gz || exit 1
   cd perl-*.*.*/
   ./Configure -des -Dprefix=${_prefix_} -Duseshrplib || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 2. Compile OpenSSL
+# 5. Compile OpenSSL
 cd "${_build_}"
 if [ ! -f "${_prefix_}/bin/openssl" ]; then
   tar -xf ${_src_}/openssl-*.*.*.tar.gz
   cd openssl-*.*.*/
   ./config --prefix=${_prefix_} --openssldir=${_prefix_} || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 3. Compile zlib
+# 6. Compile zlib
 cd "${_build_}"
 if [ ! -f "${_prefix_}/lib/libz.so" ]; then
   tar -xf ${_src_}/zlib-*.*.*.tar.gz || exit 1
   cd zlib-*.*.*/
   ./configure --prefix=${_prefix_} || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 4. Compile Python
+# 7. Compile Python
 cd "${_build_}"
 if [ ! -f "${_prefix_}/lib/libpython3.so" ]; then
   tar -xf ${_src_}/Python-*.*.*.tgz || exit 1
@@ -74,10 +104,10 @@ if [ ! -f "${_prefix_}/lib/libpython3.so" ]; then
               --enable-optimizations \
               --enable-loadable-sqlite-extensions || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 5. Compile Tcl
+# 8. Compile Tcl
 cd "${_build_}"
 if [ ! -f "${_prefix_}/lib/tclConfig.sh" ]; then
   tar -xf ${_src_}/tcl*.*.*.tar.gz || exit 1
@@ -87,10 +117,10 @@ if [ ! -f "${_prefix_}/lib/tclConfig.sh" ]; then
               --enable-shared \
               --enable-64bit || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 6. Compile ICU4c
+# 9. Compile ICU4c
 cd "${_build_}"
 if [ ! -f "${_prefix_}/bin/icu-config" ]; then
   tar -xf ${_src_}/icu-release-*-*.tar.gz || exit 1
@@ -98,30 +128,30 @@ if [ ! -f "${_prefix_}/bin/icu-config" ]; then
   ./runConfigureICU Linux --prefix=${_prefix_} \
                           --enable-icu-config || exit 1
   make -j 5 || exit 1
-  sudo make install
+  make install
 fi
 
-# 7. Compile libedit
+# 10. Compile libedit
 cd "${_build_}"
 if [ ! -f "${_prefix_}/lib/libedit.so" ]; then
   tar -xf ${_src_}/libedit-*-*.*.tar.gz || exit 1
   cd libedit-*-*.*/
   ./configure --prefix=${_prefix_} || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 8. Compile bison
+# 11. Compile bison
 cd "${_build_}"
 if [ ! -f "${_prefix_}/bin/bison" ]; then
   tar -xf ${_src_}/bison-*.*.tar.gz || exit 1
   cd bison-*.*/
   ./configure --prefix=${_prefix_} || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 9. Compile gettext
+# 12. Compile gettext
 cd "${_build_}"
 if [ ! -f "${_prefix_}/bin/gettext" ]; then
   tar -xf ${_src_}/gettext-*.*.tar.gz || exit 1
@@ -130,10 +160,10 @@ if [ ! -f "${_prefix_}/bin/gettext" ]; then
               --with-libiconv-prefix=${_prefix_} \
               --enable-shared || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 10. Compile flex
+# 13. Compile flex
 cd "${_build_}"
 if [ ! -f "${_prefix_}/bin/flex" ]; then
   tar -xf ${_src_}/flex-*.*.*.tar.gz || exit 1
@@ -141,30 +171,30 @@ if [ ! -f "${_prefix_}/bin/flex" ]; then
   ./autogen.sh || exit 1
   ./configure --prefix=${_prefix_} || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 11. Compile Kerberos5
+# 14. Compile Kerberos5
 cd "${_build_}"
 if [ ! -f "${_prefix_}/lib/libgssapi_krb5.so" ]; then
   tar -xf ${_src_}/krb5-*.*.*.tar.gz || exit 1
   cd krb5-*.*.*/src/
   ./configure --prefix=${_prefix_} || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 12. Compile libiconv
+# 15. Compile libiconv
 cd "${_build_}"
 if [ ! -f "${_prefix_}/lib/libiconv.so" ]; then
   tar -xf ${_src_}/libiconv-*.*.tar.gz || exit 1
   cd libiconv-*.*/
   ./configure --prefix=${_prefix_} || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 13. Compile libxml2
+# 16. Compile libxml2
 cd "${_build_}"
 if [ ! -f "${_prefix_}/bin/xml2-config" ]; then
   tar -xf ${_src_}/libxml2-*.*.*.tar.gz || exit 1
@@ -175,10 +205,10 @@ if [ ! -f "${_prefix_}/bin/xml2-config" ]; then
               --with-python-install-dir=${_prefix_} \
               --with-zlib=${_prefix_} || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 14. Compile libxslt
+# 17. Compile libxslt
 cd "${_build_}"
 if [ ! -f "${_prefix_}/lib/libxslt.so" ]; then
   tar -xf ${_src_}/libxslt-*.*.*.tar.gz || exit 1
@@ -192,10 +222,10 @@ if [ ! -f "${_prefix_}/lib/libxslt.so" ]; then
               LDFLAGS="-L${_prefix_}/lib" \
               LIBS="-lxml2 -lz -liconv -licui18n -licuuc -licudata -lm -ldl" || exit 1
   make -j 5 || exit 1
-  sudo make install || exit 1
+  make install || exit 1
 fi
 
-# 15. Compile OSSP-UUID
+# 18. Compile OSSP-UUID
 cd "${_build_}"
 if [ ! -f "${_prefix_}/lib/libuuid.so" ]; then
     tar -xf ${_src_}/uuid-*.*.*.tar.gz || exit 1
@@ -203,7 +233,7 @@ if [ ! -f "${_prefix_}/lib/libuuid.so" ]; then
     ./configure --prefix=${_prefix_} \
                 --with-perl=${_prefix_} || exit 1
     make -j 5 || exit 1
-    sudo make install || exit 1
+    make install || exit 1
 fi
 
 #---------------------------#
@@ -233,7 +263,7 @@ make clean > /dev/null 2>&1
   ICU_LIBS="$(icu-config --ldflags)" \
   CPPFLAGS="$(xml2-config --cflags)" || exit 1
 make world -j 5 || exit 1
-#sudo make install-world || exit 1
-sudo make install || exit 1
+#make install-world || exit 1
+make install || exit 1
 
 exit 0
